@@ -37,10 +37,12 @@ jobs:
           copy build\editor_v3.exe deploy\
           windeployqt --release --no-translations --no-opengl-sw deploy\editor_v3.exe
 
+      - name: Install NSIS
+        run: choco install nsis -y
+
       - name: Create Installer with NSIS
-        uses: joncloud/makensis-action@v4
-        with:
-          script-file: installer.nsi
+        run: |
+          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" installer.nsi
 
       - name: Upload Installer
         uses: actions/upload-artifact@v4
