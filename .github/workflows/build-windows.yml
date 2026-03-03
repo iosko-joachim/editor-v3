@@ -21,6 +21,15 @@ jobs:
           target: 'desktop'
           arch: 'win64_mingw'
           modules: 'qtcharts'
+          tools: 'tools_mingw1310'
+
+      - name: Set up Qt MinGW compiler
+        shell: bash
+        run: |
+          # Use the MinGW that ships with Qt instead of the system one
+          MINGW_PATH=$(find "$IQTA_TOOLS" -name "mingw*" -type d | grep bin | head -1)
+          echo "$MINGW_PATH" >> $GITHUB_PATH
+          echo "Using MinGW from: $MINGW_PATH"
 
       - name: Configure CMake
         run: cmake -S editor_v3 -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
