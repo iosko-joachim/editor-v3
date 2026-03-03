@@ -19,20 +19,14 @@ jobs:
           version: '6.7.2'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_mingw'
+          arch: 'win64_msvc2019_64'
           modules: 'qtcharts'
-          tools: 'tools_mingw1310'
 
-      - name: Set up Qt MinGW compiler
-        shell: bash
-        run: |
-          # Use the MinGW that ships with Qt instead of the system one
-          MINGW_PATH=$(find "$IQTA_TOOLS" -name "mingw*" -type d | grep bin | head -1)
-          echo "$MINGW_PATH" >> $GITHUB_PATH
-          echo "Using MinGW from: $MINGW_PATH"
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure CMake
-        run: cmake -S editor_v3 -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S editor_v3 -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build --config Release
@@ -40,8 +34,8 @@ jobs:
       - name: Deploy Qt dependencies
         run: |
           mkdir deploy
-          cp build/editor_v3.exe deploy/
-          windeployqt --release --no-translations --no-opengl-sw deploy/editor_v3.exe
+          copy build\editor_v3.exe deploy\
+          windeployqt --release --no-translations --no-opengl-sw deploy\editor_v3.exe
 
       - name: Create Installer with NSIS
         uses: joncloud/makensis-action@v4
