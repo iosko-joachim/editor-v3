@@ -1,0 +1,38 @@
+# Build-Ordner
+build/
+cmake-build-*/
+
+# Qt Creator
+.qtcreator/
+*.user
+*.user.*
+CMakeLists.txt.user
+
+# Kompilierte Dateien
+*.o
+*.obj
+*.exe
+*.dll
+*.a
+*.lib
+*.pdb
+*.ilk
+*.exp
+
+# Autogen (Qt MOC/UIC/RCC)
+*_autogen/
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
