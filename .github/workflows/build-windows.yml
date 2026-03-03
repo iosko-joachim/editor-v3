@@ -1,0 +1,46 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw'
+          modules: 'qtcharts'
+
+      - name: Configure CMake
+        run: cmake -S editor_v3 -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Deploy Qt dependencies
+        run: |
+          mkdir deploy
+          cp build/editor_v3.exe deploy/
+          windeployqt --release --no-translations --no-opengl-sw deploy/editor_v3.exe
+
+      - name: Create Installer with NSIS
+        uses: joncloud/makensis-action@v4
+        with:
+          script-file: installer.nsi
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor_v3-windows-installer
+          path: editor_v3_setup.exe
