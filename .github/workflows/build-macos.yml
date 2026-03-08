@@ -34,20 +34,10 @@ jobs:
       - name: Ad-hoc code sign
         run: codesign --force --deep --sign - build/editor_v3.app
 
-      - name: Create DMG
-        run: |
-          hdiutil create -volname "editor_v3" -srcfolder build/editor_v3.app -ov -format UDZO build/editor_v3.dmg
-
       - name: Package App Bundle as ZIP
         run: |
           cd build
           ditto -c -k --keepParent editor_v3.app editor_v3.app.zip
-
-      - name: Upload DMG
-        uses: actions/upload-artifact@v4
-        with:
-          name: editor_v3-macos-dmg
-          path: build/editor_v3.dmg
 
       - name: Upload App Bundle
         uses: actions/upload-artifact@v4
