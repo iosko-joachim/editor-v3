@@ -43,3 +43,10 @@ if(WIN32)
         WIN32_EXECUTABLE ON
     )
 endif()
+
+# macOS: App-Bundle erstellen
+if(APPLE)
+    set_target_properties(editor_v3 PROPERTIES
+        MACOSX_BUNDLE ON
+    )
+endif()

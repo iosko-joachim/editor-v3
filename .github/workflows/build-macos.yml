@@ -1,0 +1,44 @@
+name: Build macOS App
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.2'
+          host: 'mac'
+          target: 'desktop'
+          arch: 'clang_64'
+          modules: 'qtcharts'
+
+      - name: Configure CMake
+        run: cmake -S editor_v3 -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Deploy Qt dependencies
+        run: macdeployqt build/editor_v3.app -dmg
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor_v3-macos-dmg
+          path: build/editor_v3.dmg
+
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor_v3-macos-app
+          path: build/editor_v3.app
