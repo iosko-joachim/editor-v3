@@ -29,7 +29,14 @@ jobs:
         run: cmake --build build --config Release
 
       - name: Deploy Qt dependencies
-        run: macdeployqt build/editor_v3.app -dmg
+        run: macdeployqt build/editor_v3.app
+
+      - name: Ad-hoc code sign
+        run: codesign --force --deep --sign - build/editor_v3.app
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "editor_v3" -srcfolder build/editor_v3.app -ov -format UDZO build/editor_v3.dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
