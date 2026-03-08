@@ -38,6 +38,11 @@ jobs:
         run: |
           hdiutil create -volname "editor_v3" -srcfolder build/editor_v3.app -ov -format UDZO build/editor_v3.dmg
 
+      - name: Package App Bundle as ZIP
+        run: |
+          cd build
+          ditto -c -k --keepParent editor_v3.app editor_v3.app.zip
+
       - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
@@ -48,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: editor_v3-macos-app
-          path: build/editor_v3.app
+          path: build/editor_v3.app.zip
